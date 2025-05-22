@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>我的日記 - 封面</title>
+  <style>
+    body {
+      margin: 0;
+      background: #8b4513;
+      color: #f1e2c5;
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 2px 2px #6b3309; }
+    p { font-size: 18px; margin-bottom: 40px; }
+    button {
+      padding: 15px 30px; background-color: #6b3309; color: #f1e2c5;
+      border: none; border-radius: 5px; cursor: pointer;
+      font-size: 18px; font-family: 'Georgia', serif;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    button:hover { background-color: #5a2907; transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <h1>我的日記</h1>
+  <p>使用ai幫你生成對應日記的文字</p>
+  <button onclick="location.href='/calendar'">開始</button>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的日記 - 內容</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #f5f0e5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 { color: #8b4513; }
+    .diary-container {
+      position: relative;
+      width: 95%;
+      max-width: 800px;
+      margin-top: 10px;
+    }
+    .diary-container img {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 300px;
+      height: 200px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      border: 2px solid #8b4513;
+      cursor: pointer;
+    }
+    textarea {
+      width: 100%;
+      height: 70vh;
+      background: linear-gradient(to bottom, #f9f5ea 9px, #e5cdaa 10px);
+      background-size: 100% 10px;
+      line-height: 1.5;
+      padding: 15px;
+      font-family: 'Georgia', serif;
+      font-size: 18px;
+      border: 2px solid #8b4513;
+      border-radius: 10px;
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+      color: #333;
+      resize: vertical;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #6b3309;
+      box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      background-color: #8b4513;
+      color: #f1e2c5;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background-color: #6b3309; }
+    input[type="file"] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="date-title"></h1>
+  <div style="position: absolute; top: 20px; right: 30px;">
+    <label for="model-select" style="font-weight:bold;">風格：</label>
+    <select id="model-select" style="font-size: 16px; padding: 5px;">
+      <option value="1">可愛動漫風</option>
+      <option value="2">迪士尼風</option>
+      <option value="3">寫實照片風</option>
+      <option value="4">剪紙插畫風</option>
+      <option value="5">藝術、奇幻風</option>
+    </select>
+  </div>
+  <div class="diary-container">
+    <!-- 使用static存放miffy照片 -->
+    <img id="diary-image" src="/static/miffy.jpeg" alt="圖片">
+    <textarea id="diary" placeholder="請在此輸入今天的日記..."></textarea>
+    <input type="file" id="file-input" accept="image/*">
+  </div>
+  <button onclick="generateImageFromDiary()">AI 生成圖片</button>
+  <button onclick="goBack()">回到日曆</button>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const date = params.get("date");
+    document.getElementById("date-title").textContent = `日記：${date}`;
+
+    const textarea = document.getElementById("diary");
+    const img = document.getElementById("diary-image");
+    const fileInput = document.getElementById("file-input");
+
+    const textKey = `diary-${date}`;
+    const imageKey = `diary-image-${date}`;
+
+    // loac 日記文字
+    textarea.value = localStorage.getItem(textKey) || "";
+
+    // load 日記圖片
+    const savedImage = localStorage.getItem(imageKey);
+    if (savedImage) {
+      img.src = savedImage;
+    }
+
+    // 儲存文字
+    textarea.addEventListener("input", () => {
+      localStorage.setItem(textKey, textarea.value);
+    });
+
+    // 點擊圖片從本機上傳圖片
+    img.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    // 選擇圖片後儲存到 localStorage
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64Image = e.target.result;
+          img.src = base64Image;
+          localStorage.setItem(imageKey, base64Image);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function goBack() {
+      window.location.href = "/calendar";
+    }
+    async function generateImageFromDiary() {
+      const button = event.target;
+      button.textContent = "生成中...";
+      button.disabled = true;
+
+      const diaryText = textarea.value.trim();
+      if (!diaryText) {
+        alert("請先輸入日記內容！");
+        button.textContent = "AI 生成圖片";
+        button.disabled = false;
+        return;
+      }
+      const selectedModel = document.getElementById("model-select").value;
+
+      try {
+        const response = await fetch("http://104.171.203.22:5000/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: diaryText,
+            model: selectedModel
+          })
+        });
+
+        if (!response.ok) throw new Error("生成失敗");
+
+        const blob = await response.blob();
+        const imageUrl = URL.createObjectURL(blob);
+
+        img.src = imageUrl;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          localStorage.setItem(imageKey, reader.result);
+        };
+        reader.readAsDataURL(blob);
+      } catch (err) {
+        alert("發生錯誤：" + err.message);
+      } finally {
+        button.textContent = "AI 生成圖片";
+        button.disabled = false;
+      }
+    }
+
+  </script>
+</body>
+</html>

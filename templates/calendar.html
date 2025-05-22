@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的日記 - 日曆</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #f5f0e5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #8b4513;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    button {
+      background-color: #8b4513;
+      color: #f1e2c5;
+      border: none;
+      padding: 5px 10px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #6b3309; }
+    table { border-collapse: collapse; margin-top: 10px; }
+    th, td {
+      width: 50px; height: 50px; text-align: center;
+      border: 1px solid #8b4513; cursor: pointer;
+      font-size: 16px; position: relative;
+    }
+    th { background-color: #8b4513; color: #f1e2c5; cursor: default; }
+    td:hover { background-color: #e5cdaa; }
+    .today { background-color: #cc0000; color: white; }
+    .marked::after {
+      content: "✔";
+      position: absolute;
+      bottom: 3px;
+      right: 5px;
+      font-size: 14px;
+      color: #008000;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    <button onclick="changeMonth(-1)">←</button>
+    <span id="month-title"></span>
+    <button onclick="changeMonth(1)">→</button>
+  </h1>
+  <table id="calendar"></table>
+
+  <script>
+    const calendar = document.getElementById("calendar");
+    const monthTitle = document.getElementById("month-title");
+    let currentDate = new Date();
+
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      monthTitle.textContent = `${year}年 ${month + 1}月`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+      let html = "<tr>" + weekdays.map(d => `<th>${d}</th>`).join("") + "</tr><tr>";
+
+      for (let i = 0; i < firstDay; i++) html += "<td></td>";
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+        const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day ? "today" : "";
+
+        // 檢查 localStorage 是否有內容
+        const content = localStorage.getItem(`diary-${dateStr}`);
+        const marked = content && content.trim() !== "" ? "marked" : "";
+
+        html += `<td class="${isToday} ${marked}" onclick="goToDiary('${dateStr}')">${day}</td>`;
+        if ((firstDay + day) % 7 === 0) html += "</tr><tr>";
+      }
+      html += "</tr>";
+      calendar.innerHTML = html;
+    }
+
+    function changeMonth(offset) {
+      currentDate.setMonth(currentDate.getMonth() + offset);
+      renderCalendar();
+    }
+
+    function goToDiary(date) {
+      window.location.href = `/diary?date=${date}`;
+    }
+
+    renderCalendar();
+  </script>
+</body>
+</html>
