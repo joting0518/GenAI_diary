@@ -83,7 +83,8 @@ Running on http://<你的IP>:5000
 由於 `anything-v4.0`（pipe1）有內建 **NSFW 安全檢查機制**，若生成結果疑似為不當內容將會回傳黑圖。
 
 目前為了測試方便，已將 safety checker 關閉：
+
 ```python
 pipe1.safety_checker = lambda images, clip_input: (images, [False] * len(images))
 ⚠️ 若部署至正式環境，建議開啟 safety checker 以避免生成不當圖像。
-
+```
