@@ -41,6 +41,7 @@ elif model_id == 4:
     prompt = "Use Papercut Illustration to generate" + prompt
 else:
     prompt = "Use Master Painting Style to generate" + prompt
+```
 
 ## 🖼️ 使用流程
 
@@ -66,6 +67,7 @@ git clone https://github.com/joting0518/GenAI_diary.git
 cd GenAI_diary
 pip install -r requirements.txt   # 安裝所需套件
 python3 app.py                    # 啟動 Flask 服務
+```
 
 ### ✅ 啟動成功時會看到：
 
