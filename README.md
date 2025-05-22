@@ -46,21 +46,23 @@ else:
 
 1. **首頁（封面頁）**  
    點擊 `Start` 按鈕，導向日曆頁面。
-
+![首頁畫面](https://github.com/joting0518/GenAI_diary/blob/main/sample/cover.png?raw=true)
 2. **日曆頁（calendar.html）**  
    使用者選擇某一天來撰寫日記。
+![日曆畫面](https://github.com/joting0518/GenAI_diary/blob/main/sample/calendar.png?raw=true)
 
 3. **日記頁（diary.html）**  
    - 選擇想要的圖片生成風格（右上角下拉選單）  
    - 撰寫日記內容  
    - 點擊「AI 生成圖片」按鈕，後端會根據內容產圖並顯示在右上角圖片框中。
-
+![日記畫面](https://github.com/joting0518/GenAI_diary/blob/main/sample/diary_content.png?raw=true)
+![日記範例](https://github.com/joting0518/GenAI_diary/blob/main/sample/diary_sample.png?raw=true)
 ---
 
 ## 🚀 安裝與執行
 
 ```bash
-git clone https://github.com/你的帳號/GenAI_diary.git
+git clone https://github.com/joting0518/GenAI_diary.git
 cd GenAI_diary
 pip install -r requirements.txt   # 安裝所需套件
 python3 app.py                    # 啟動 Flask 服務
