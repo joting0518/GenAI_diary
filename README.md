@@ -56,7 +56,10 @@ else:
    - 選擇想要的圖片生成風格（右上角下拉選單）  
    - 撰寫日記內容  
    - 點擊「AI 生成圖片」按鈕，後端會根據內容產圖並顯示在右上角圖片框中。
+
+日記畫面:
 ![日記畫面](https://github.com/joting0518/GenAI_diary/blob/main/sample/diary_content.png?raw=true)
+日記範例:
 ![日記範例](https://github.com/joting0518/GenAI_diary/blob/main/sample/diary_sample.png?raw=true)
 ---
 
@@ -73,7 +76,7 @@ python3 app.py                    # 啟動 Flask 服務
 
 所有模型準備完成，啟動 Flask server，日記開始使用
 
-Running on http://127.0.0.1:5000
+Running on http://127.0.0.1:5000 or 
 Running on http://<你的IP>:5000
 
 請打開瀏覽器進入網址開始使用服務
@@ -90,3 +93,4 @@ Running on http://<你的IP>:5000
 pipe1.safety_checker = lambda images, clip_input: (images, [False] * len(images))
 ⚠️ 若部署至正式環境，建議開啟 safety checker 以避免生成不當圖像。
 ```
+## 聲明：＊前端畫面主要是透過生成式 AI 生成模板後再改成現在的模樣。
