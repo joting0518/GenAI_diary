@@ -151,7 +151,7 @@
       const selectedModel = document.getElementById("model-select").value;
 
       try {
-        const response = await fetch("http://104.171.203.22:5000/generate", {
+        const response = await fetch(`${window.location.origin}/generate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
